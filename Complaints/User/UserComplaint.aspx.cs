@@ -16,25 +16,34 @@ namespace PtclCustomerService
             activeHyp.CssClass += " active";
             PendingGridView();
             ApprovedGridView();
-            if (Request.QueryString["register"] == "1")
+            bool register = Request.QueryString["register"] == "1";
+            bool closed = Request.QueryString["closed"] == "1";
+            bool active = Request.QueryString["Active"] == "1" || (!register && !closed);
+            if (register)
             {
                 if (Request.QueryString["ComplaintID"] != null)
                 {
-                    RegeneratedArea.CssClass = " my-3";
+                    RegeneratedArea.CssClass = "field";
                     txtParentID.Text = ParentComplaintID().ToString();
                 }
 
-                lblTitle.Text = "Register Your Complaint";
+                lblTitle.Text = RegeneratedArea.CssClass == "field" ? "Raise a complaint again" : "Register a complaint";
+                lblIntro.Text = "Tell us what's wrong with your internet, landline or bill. You get an email when it's fixed.";
+                RegisterComplaint.CssClass += " active";
                 PanelRegisterComplaint.CssClass = " ";
             }
-            if (Request.QueryString["Active"] == "1")
+            if (active)
             {
-                lblTitle.Text = "Active Complaints";
+                lblTitle.Text = "My complaints";
+                lblIntro.Text = "Complaints our team is still working on. You can delete one you no longer need.";
+                PendingComplaint.CssClass += " active";
                 PanelPendingComplaint.CssClass = " ";
             }
-            if (Request.QueryString["closed"] == "1")
+            if (closed)
             {
-                lblTitle.Text = "Closed Complaints";
+                lblTitle.Text = "My complaints";
+                lblIntro.Text = "Solved complaints. If a problem comes back, open the complaint and raise it again.";
+                ApprovedComplaint.CssClass += " active";
                 PanelApprovedComplaint.CssClass = " ";
             }
             using (PTCLEntities db = new PTCLEntities())
@@ -49,13 +58,14 @@ namespace PtclCustomerService
             }
         }
 
-        // "Other" is selected by default when it exists
+        // the customer picks the type; nothing is chosen for them
         private void SelectDefaultType()
         {
-            if (ddlComplaint.Items.FindByValue("7") != null)
+            if (ddlComplaint.Items.FindByValue("") == null)
             {
-                ddlComplaint.SelectedValue = "7";
+                ddlComplaint.Items.Insert(0, new ListItem("Choose one", ""));
             }
+            ddlComplaint.SelectedValue = "";
         }
 
         private int ParentComplaintID()
@@ -183,7 +193,8 @@ namespace PtclCustomerService
                     // back to a normal form, so the same complaint isn't raised again twice
                     Response.Redirect("~/Complaints/User/UserComplaint.aspx?register=1");
                 }
-                lblMsg.Text = "Complaint Registered Successfully";
+                lblMsg.CssClass = "form-msg ok";
+                lblMsg.Text = "Complaint registered. You'll get an email when it's solved.";
                 PendingGridView();
             }
         }

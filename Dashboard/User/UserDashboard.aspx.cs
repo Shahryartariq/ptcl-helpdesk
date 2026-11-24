@@ -1,9 +1,7 @@
 ﻿using PtclCustomerService.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace PtclCustomerService
@@ -18,12 +16,26 @@ namespace PtclCustomerService
             {
                 if (Session["UserID"] != null)
                 {
-                    //int UserID = (int)Session["UserID"];
-                    int UserID = (int)Convert.ToUInt32(Session["UserID"]);
-                    var totalCount = db.GetMyComplaints(UserID).ToList();
+                    int UserID = Convert.ToInt32(Session["UserID"]);
+                    tblPtclUser u = db.tblPtclUsers.FirstOrDefault(v => v.UserID == UserID);
+                    if (u != null)
+                    {
+                        lblHello.Text = "Hello, " + HttpUtility.HtmlEncode(u.FirstName);
+                        tblUserLocation l = db.tblUserLocations.FirstOrDefault(v => v.LocationID == u.LocationID);
+                        lblLine.Text = l == null
+                            ? "Your landline: " + HttpUtility.HtmlEncode(u.landline)
+                            : "Your landline: " + Ui.Landline(l.LocationCode, u.landline) + ", " + HttpUtility.HtmlEncode(l.LocationName);
+                    }
 
-                    int count = totalCount.Count;
-                    lblActiveComplaints.Text = count.ToString();
+                    var myComplaints = db.GetMyComplaints(UserID).ToList();
+                    lblActiveComplaints.Text = myComplaints.Count.ToString();
+                    lblOpen.Text = myComplaints.Count(c => c.ComplaintStatus != true).ToString();
+                    lblSolved.Text = myComplaints.Count(c => c.ComplaintStatus == true).ToString();
+
+                    RptRecent.DataSource = myComplaints.OrderByDescending(c => c.ComplaintCreationDate).Take(5).ToList();
+                    RptRecent.DataBind();
+                    RptRecent.Visible = myComplaints.Count > 0;
+                    PanelNoComplaints.Visible = myComplaints.Count == 0;
                 }
             }
         }
