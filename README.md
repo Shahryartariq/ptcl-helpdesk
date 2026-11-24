@@ -23,12 +23,23 @@ I built this in 2021 as my Enterprise Application Development (EAD) semester pro
 - Bills for every customer
 - Report of solved complaints, filtered by admin and/or city
 
+## Screenshots
+
+| Customer | Support team |
+|---|---|
+| ![Customer dashboard](docs/screenshots/customer-dashboard.png) | ![Admin dashboard](docs/screenshots/admin-dashboard.png) |
+| ![Register a complaint](docs/screenshots/register-complaint.png) | ![Complaints list](docs/screenshots/admin-complaints.png) |
+| ![A complaint](docs/screenshots/complaint.png) | ![Resolving a complaint](docs/screenshots/admin-complaint.png) |
+| ![Monthly bill](docs/screenshots/bill.png) | ![Report](docs/screenshots/admin-report.png) |
+
+![Log in](docs/screenshots/login.png)
+
 ## Tech stack
 
 - **ASP.NET Web Forms** on .NET Framework 4.7.2, written in C#
 - **Entity Framework 6** (database first) with **SQL Server Express** and stored procedures
 - **Argon2id** password hashing ([Konscious.Security.Cryptography](https://github.com/kmaragon/Konscious.Security.Cryptography)), with a random salt per password
-- Bootstrap 5 with the [SB Admin](https://startbootstrap.com/template/sb-admin) template, Font Awesome, DataTables and Simple DataTables
+- Bootstrap 5 grid with one hand-written stylesheet (`Css/pcs.css`), the [Lexend](https://www.lexend.com/) typeface (self-hosted, OFL), Font Awesome and DataTables
 - pdfmake and html2canvas for the bill PDF
 - Gmail SMTP for the "complaint resolved" email
 
@@ -79,6 +90,8 @@ AuthCookie.cs      encrypted "remember me" cookie
 PasswordHasher.cs  Argon2id password hashing
 Uploads.cs         checks and saves uploaded pictures and attachments
 Email.cs           sends the "complaint resolved" email
+Ui.cs              status pills, dates and landline numbers shown the same way on every page
+Css/pcs.css        the whole design: colours, type, layout, tables, forms
 ```
 
 ## 2026 update
@@ -91,3 +104,4 @@ In 2026 I went back over the project without changing its design. I added the da
 - Each password has its own salt, and editing a profile no longer breaks the password or creates a duplicate account
 - Uploads get unique names, a size limit and a file type check, and text from the database is HTML-encoded
 - Fixed the report filters, the complaint limit and pages that crashed on missing data
+- A new design on every page: one stylesheet instead of the SB Admin template, a sidebar that no longer covers the content, readable forms with a message under each field, status shown as Waiting / Solved / Raised again, dashboards with the latest complaints, and layouts that work on phones
