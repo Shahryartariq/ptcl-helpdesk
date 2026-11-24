@@ -1,9 +1,8 @@
 ﻿using PtclCustomerService.Models;
 using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace PtclCustomerService.Billing.Admin
@@ -12,125 +11,67 @@ namespace PtclCustomerService.Billing.Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["UserID"] != null)
+            HyperLink activeHyp = Master.FindControl("HypAdminBill") as HyperLink;
+            activeHyp.CssClass += " active";
+            if (IsPostBack == true) return;
+
+            int UserID;
+            if (!int.TryParse(Request.QueryString["UserID"], out UserID))
             {
-                using (PTCLEntities db = new PTCLEntities())
+                Response.Redirect("~/Errors/404NotFound.aspx");
+            }
+            using (PTCLEntities db = new PTCLEntities())
+            {
+                tblPtclUser s = db.tblPtclUsers.FirstOrDefault(v => v.UserID == UserID);
+                if (s == null)
                 {
-                    if (IsPostBack == true) return;
-                    ddMonthList.SelectedValue = "0";
-                    int UserID = Convert.ToInt32(Request.QueryString["UserID"]);
-                    tblPtclUser s = db.tblPtclUsers.FirstOrDefault(v => v.UserID == UserID);
-                    if (s == null)
-                    {
-                        Response.Redirect("~/Errors/404NotFound.aspx");
-                    }
-                    lblBillName.Text = HttpUtility.HtmlEncode(s.FirstName + " " + s.LastName);
-                    lbluserID.Text = s.UserID.ToString();
+                    Response.Redirect("~/Errors/404NotFound.aspx");
+                }
+                lblBillName.Text = HttpUtility.HtmlEncode(s.FirstName + " " + s.LastName);
+                lbluserID.Text = s.UserID.ToString();
+                lblDueDate.Text = Ui.Date(DateTime.Now.AddDays(10)).Split(',')[0];
 
-                    DateTime dateAndTime = DateTime.Now.AddDays(10);
-                    lblDueDate.Text = "Due Date: " + dateAndTime.ToString("dd/MM/yyyy");
-
+                tblUserLocation l = db.tblUserLocations.FirstOrDefault(x => x.LocationID == s.LocationID);
+                if (l == null || string.IsNullOrEmpty(l.LocationName))
+                {
                     tblLandline.Text = HttpUtility.HtmlEncode(s.landline);
-
-                    //location
-                    tblUserLocation l = db.tblUserLocations.FirstOrDefault(x => x.LocationID == s.LocationID);
-                    if (l == null || string.IsNullOrEmpty(l.LocationName))
-                    {
-                        lblLocation.Text = "No location";
-                    }
-                    else
-                    {
-                        lblLocation.Text = HttpUtility.HtmlEncode(l.LocationName);
-                    }
-                    FillList();
+                    lblLocation.Text = "No city set";
+                }
+                else
+                {
+                    tblLandline.Text = Ui.Landline(l.LocationCode, s.landline);
+                    lblLocation.Text = HttpUtility.HtmlEncode(l.LocationName);
                 }
             }
-        }
 
-        protected void FillList()
-        {
-            if (ddMonthList.SelectedValue == "0")
-            {
-                lblMonth.Text = "Select";
-            }
-            else if (ddMonthList.SelectedValue == "1")
-            {
-                lblMonth.Text = "January";
-            }
-            else if (ddMonthList.SelectedValue == "2")
-            {
-                lblMonth.Text = "February";
-            }
-            else if (ddMonthList.SelectedValue == "3")
-            {
-                lblMonth.Text = "March";
-            }
-            else if (ddMonthList.SelectedValue == "4")
-            {
-                lblMonth.Text = "April";
-            }
-            else if (ddMonthList.SelectedValue == "5")
-            {
-                lblMonth.Text = "May";
-            }
-            else if (ddMonthList.SelectedValue == "6")
-            {
-                lblMonth.Text = "June";
-            }
-            else if (ddMonthList.SelectedValue == "7")
-            {
-                lblMonth.Text = "July";
-            }
-            else if (ddMonthList.SelectedValue == "8")
-            {
-                lblMonth.Text = "August";
-            }
-            else if (ddMonthList.SelectedValue == "9")
-            {
-                lblMonth.Text = "September";
-            }
-            else if (ddMonthList.SelectedValue == "10")
-            {
-                lblMonth.Text = "October";
-            }
-            else if (ddMonthList.SelectedValue == "11")
-            {
-                lblMonth.Text = "November";
-            }
-            else if (ddMonthList.SelectedValue == "12")
-            {
-                lblMonth.Text = "December";
-            }
-            else
-            {
-                Response.Redirect("~/Errors/Something Went Wrong.aspx");
-            }
+            // open on this month's bill
+            ddMonthList.SelectedValue = DateTime.Now.Month.ToString();
+            ShowMonth();
         }
 
         protected void listChange(object sender, EventArgs e)
         {
-            FillList();
-            //Response.Write(ddMonthList.SelectedValue + " ------ " + ddMonthList.SelectedItem.Text + "<br/>");
-            int val = Convert.ToInt32(ddMonthList.SelectedValue);
-            //lblNoBill.Text = val.ToString();
-            int monthnum = Convert.ToInt32(DateTime.Now.Month);
-            if (val == 0)
+            ShowMonth();
+        }
+
+        // bills exist for this month and the months before it
+        private void ShowMonth()
+        {
+            int month = Convert.ToInt32(ddMonthList.SelectedValue);
+            lblMonth.Text = month == 0 ? "" : CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(month) + " " + DateTime.Now.Year;
+            lblNoMonth.Text = "";
+            lblNoBill.Text = "";
+
+            bool show = month > 0 && month <= DateTime.Now.Month;
+            panelBill.Visible = show;
+            PanelActions.Visible = show;
+            if (month == 0)
             {
-                panelBill.Visible = false;
-                lblNoBill.Text = "";
-                lblNoMonth.Text = "Please Select Billing Month";
+                lblNoMonth.Text = "Choose a month to see its bill.";
             }
-            else if (val <= monthnum)
+            else if (!show)
             {
-                panelBill.Visible = true;
-                lblNoMonth.Text = "";
-                lblNoBill.Text = "";
-            }
-            else
-            {
-                panelBill.Visible = false;
-                lblNoMonth.Text = "";
-                lblNoBill.Text = "Bill Will be Displayed Soon. Keep Patience Beloved Customer";
+                lblNoBill.Text = "The bill for " + ddMonthList.SelectedItem.Text + " isn't ready yet. Bills appear at the start of each month.";
             }
         }
     }

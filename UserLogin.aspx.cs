@@ -34,12 +34,12 @@ namespace PtclCustomerService
 
                 if (u == null || !PasswordHasher.Verify(txtPassword.Text, u.Password))
                 {
-                    lblMsg.Text = "Invalid Email or Password";
+                    lblMsg.Text = "That email and password don't match an account.";
                     return;
                 }
                 if (u.Status == false)
                 {
-                    lblMsg.Text = "Your account is inactive. Please contact PTCL customer service";
+                    lblMsg.Text = "Your account is inactive. Please contact PTCL customer service.";
                     return;
                 }
 

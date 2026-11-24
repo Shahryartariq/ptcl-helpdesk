@@ -26,7 +26,7 @@ namespace PtclCustomerService
                     // account deleted or blocked while logged in
                     Response.Redirect("~/Logout.aspx?userSide=1");
                 }
-                lblName.Text = "Login as: " + HttpUtility.HtmlEncode(s.FirstName);
+                lblName.Text = "Signed in as " + HttpUtility.HtmlEncode(s.FirstName);
             }
         }
     }

@@ -35,7 +35,6 @@ namespace PtclCustomerService
                 txtEmail.Text = s.EmailAddress;
                 txtPhone.Text = s.Phone;
                 txtCnic.Text = s.Cnic;
-                txtStatus.Text = s.Status ? "Active" : "Inactive";
                 lblUpload.Text = HttpUtility.HtmlEncode(s.CustomerDP);
                 txtLandLineNumber.Text = s.landline;
                 if (s.LocationID.HasValue && ddlLocationCode.Items.FindByValue(s.LocationID.ToString()) != null)
@@ -60,12 +59,12 @@ namespace PtclCustomerService
                 // taken by another customer, not by this one
                 if (db.tblPtclUsers.Any(v => v.EmailAddress == email && v.UserID != UserID))
                 {
-                    lblMsg.Text = "Email Already Taken";
+                    lblMsg.Text = "Another account already uses this email.";
                     return;
                 }
                 if (db.tblPtclUsers.Any(v => v.landline == landline && v.UserID != UserID))
                 {
-                    lblMsg.Text = "LandLine Already Taken";
+                    lblMsg.Text = "This landline number is already registered to another account.";
                     return;
                 }
 
@@ -96,7 +95,8 @@ namespace PtclCustomerService
 
                 db.SaveChanges();
                 Session["FirstName"] = u.FirstName;
-                lblMsg.Text = "Profile Updated Successfully";
+                lblMsg.CssClass = "form-msg ok mt-3";
+                lblMsg.Text = "Your profile has been saved.";
             }
         }
     }

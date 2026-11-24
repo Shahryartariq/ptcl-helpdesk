@@ -1,100 +1,72 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/AdminPanelMasterPage.Master" AutoEventWireup="true" CodeBehind="AdminSetup.aspx.cs" Inherits="PtclCustomerService.AdminSetup" %>
+﻿<%@ Page Title="Admin - PCS" Language="C#" MasterPageFile="~/AdminPanelMasterPage.Master" AutoEventWireup="true" CodeBehind="AdminSetup.aspx.cs" Inherits="PtclCustomerService.AdminSetup" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <script src="../../Js/scripts.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h3 class="text-center my-3 text-success ">Add Admin New</h3>
-    <div class="row w-75 m-auto">
-
-        <div class="card mb-4 card-body">
-
-            <div class="form-group mt-4">
-                <label>UserName: </label>
-                <asp:RequiredFieldValidator runat="server" ID="RFV1" ControlToValidate="txtUserName" SetFocusOnError="true" Text="*" ErrorMessage="Please Enter Your UserName" ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-                <asp:TextBox runat="server" ID="txtUserName" CssClass="form-control w-100"></asp:TextBox>
-            </div>
-
-            <div class="form-group mt-4">
-                <label>FullName: </label>
-                <asp:RequiredFieldValidator runat="server" ID="RFV2" ControlToValidate="txtFullName" SetFocusOnError="true" Text="*" ErrorMessage="Please Enter Your FullName   " ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-                <asp:TextBox runat="server" ID="txtFullName" CssClass="form-control w-100"></asp:TextBox>
-            </div>
-
-            <div class="form-group mt-4">
-                <label>Email: </label>
-                <asp:RequiredFieldValidator runat="server" ID="RFV3" ControlToValidate="txtEmailAddress" SetFocusOnError="true" Text="*" ErrorMessage="Please Enter Your Email   " ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-                <asp:TextBox runat="server" ID="txtEmailAddress" CssClass="form-control w-100" TextMode="Email"></asp:TextBox>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group mt-4">
-                        <label>Password: </label>
-                        <asp:CompareValidator runat="server" ID="CMV4" ControlToValidate="txtPassword" ControlToCompare="txtConfirmPassword" SetFocusOnError="true" Text="*" ErrorMessage="Passwords Do Not Match" ForeColor="Red" ValidationGroup="AdminSetup"></asp:CompareValidator>
-                        <asp:RequiredFieldValidator runat="server" ID="RFV5" ControlToValidate="txtPassword" SetFocusOnError="true" Text="*" ErrorMessage="Please Enter Your Password" ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-                        <asp:TextBox runat="server" ID="txtPassword" CssClass="form-control"></asp:TextBox>
-                    </div>
-                </div>
-
-                <div class="col-lg-6">
-                    <div class="form-group mt-4">
-                        <label>Confirm Password: </label>
-                        <asp:RequiredFieldValidator runat="server" ID="RFV6" ControlToValidate="txtConfirmPassword" SetFocusOnError="true" Text="*" ErrorMessage="Please Confirm Password" ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-
-                        <asp:TextBox runat="server" ID="txtConfirmPassword" CssClass="form-control"></asp:TextBox>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group mt-4">
-                        <label>Location: </label>
-                        <asp:RequiredFieldValidator runat="server" ID="RFV4" ControlToValidate="txtLocation" SetFocusOnError="true" Text="*" ErrorMessage="Please Enter Your Address   " ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-                        <asp:TextBox runat="server" ID="txtLocation" CssClass="form-control w-100"></asp:TextBox>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="form-group mt-4">
-                        <label>Phone: </label>
-
-                        <asp:RequiredFieldValidator runat="server" ID="RFVPhone" ControlToValidate="txtPhone" SetFocusOnError="true" Text="*" ErrorMessage="Please Enter Your Phone Number" ForeColor="Red" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
-                        <asp:RegularExpressionValidator runat="server" ID="REVP" ControlToValidate="txtPhone" SetFocusOnError="true" Text="*" ErrorMessage="Invalid Phone Number" ForeColor="Red" ValidationExpression="^[0-9]{11,12}$" ValidationGroup="AdminSetup"></asp:RegularExpressionValidator>
-
-                        <asp:TextBox runat="server" ID="txtPhone" CssClass="form-control" TextMode="Phone"></asp:TextBox>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group mt-4">
-                <label>Status:  </label>
-                <asp:DropDownList runat="server" ID="ddlStatus" CssClass="form-control w-50">
-                    <asp:ListItem Text="True" Value="true" />
-                    <asp:ListItem Text="False" Value="false" />
-                </asp:DropDownList>
-            </div>
-
-            <div class="form-group mt-4">
-                <label>Upload Your Profile Picture </label>
-                <br />
-                <asp:FileUpload ID="FileUpload" runat="server" /><br />
-                <asp:Label ID="lblUpload" runat="server" Text=""></asp:Label>
-            </div>
-
-            <!-- Validation Summary  -->
-            <div class="mt-2">
-                <asp:ValidationSummary runat="server" ID="ValidationSummary1" ForeColor="Red" ValidationGroup="AdminSetup" />
-            </div>
-
-            <div class="form-group mb-2">
-                <asp:Button Text="Submit" runat="server" ID="cmdCreate" CssClass="btn btn-primary mt-4" OnClick="cmdCreate_Click" ValidationGroup="AdminSetup" />
-                <asp:HyperLink ID="HypCancel" runat="server" CssClass="btn btn-primary mt-4" NavigateUrl="~/ManageAccounts/Admin/ManageAdmins.aspx">Cancel</asp:HyperLink>
-
-                <div>
-                    <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
-                </div>
-            </div>
+    <asp:HyperLink ID="HypCancel" runat="server" CssClass="back-link" NavigateUrl="~/ManageAccounts/Admin/ManageAdmins.aspx"><i class="fas fa-arrow-left me-1"></i> Back</asp:HyperLink>
+    <div class="page-head">
+        <div>
+            <h1><asp:Label runat="server" ID="lblHeading" Text="Add an admin"></asp:Label></h1>
+            <p>Admins can see every complaint and customer, and resolve complaints.</p>
         </div>
     </div>
+
+    <section class="panel">
+        <div class="panel-body">
+            <div class="row g-3 form-wide">
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtFullName.ClientID %>">Full name</label>
+                    <asp:TextBox runat="server" ID="txtFullName" CssClass="form-control"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ID="RFV2" ControlToValidate="txtFullName" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Enter the full name" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtUserName.ClientID %>">Username</label>
+                    <asp:TextBox runat="server" ID="txtUserName" CssClass="form-control" autocomplete="off"></asp:TextBox>
+                    <span class="field-hint">Used to log in.</span>
+                    <asp:RequiredFieldValidator runat="server" ID="RFV1" ControlToValidate="txtUserName" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Choose a username" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtEmailAddress.ClientID %>">Email</label>
+                    <asp:TextBox runat="server" ID="txtEmailAddress" CssClass="form-control" inputmode="email"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ID="RFV3" ControlToValidate="txtEmailAddress" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Enter an email" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtPhone.ClientID %>">Phone</label>
+                    <asp:TextBox runat="server" ID="txtPhone" CssClass="form-control" inputmode="tel"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ID="RFVPhone" ControlToValidate="txtPhone" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Enter a phone number" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                    <asp:RegularExpressionValidator runat="server" ID="REVP" ControlToValidate="txtPhone" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Use 11 or 12 digits, e.g. 03001234567" ValidationGroup="AdminSetup" ValidationExpression="^[0-9]{11,12}$"></asp:RegularExpressionValidator>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtLocation.ClientID %>">Office</label>
+                    <asp:TextBox runat="server" ID="txtLocation" CssClass="form-control" placeholder="City or office name"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ID="RFV4" ControlToValidate="txtLocation" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Enter the office" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= ddlStatus.ClientID %>">Account</label>
+                    <asp:DropDownList runat="server" ID="ddlStatus" CssClass="form-select"><asp:ListItem Text="Active, can log in" Value="true" /><asp:ListItem Text="Inactive, can't log in" Value="false" /></asp:DropDownList>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtPassword.ClientID %>">Password</label>
+                    <asp:TextBox runat="server" ID="txtPassword" CssClass="form-control" autocomplete="new-password"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ID="RFV5" ControlToValidate="txtPassword" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Choose a password" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                </div>
+                <div class="col-sm-6 field mb-0">
+                    <label for="<%= txtConfirmPassword.ClientID %>">Confirm password</label>
+                    <asp:TextBox runat="server" ID="txtConfirmPassword" CssClass="form-control" autocomplete="new-password"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ID="RFV6" ControlToValidate="txtConfirmPassword" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Type the password again" ValidationGroup="AdminSetup"></asp:RequiredFieldValidator>
+                    <asp:CompareValidator runat="server" ID="CMV4" ControlToValidate="txtConfirmPassword" ControlToCompare="txtPassword" Display="Dynamic" CssClass="field-error" ErrorMessage="The passwords don't match" ValidationGroup="AdminSetup"></asp:CompareValidator>
+                </div>
+                <div class="col-12 field mb-0">
+                    <label for="<%= FileUpload.ClientID %>">Profile picture <span class="text-muted fw-normal">(optional)</span></label>
+                    <asp:FileUpload ID="FileUpload" runat="server" accept=".png,.jpg,.jpeg" />
+                    <span class="field-hint">JPG or PNG, up to 2 MB. <asp:Label ID="lblUpload" runat="server" Visible="false"></asp:Label></span>
+                </div>
+            </div>
+
+            <asp:Label runat="server" ID="lblMsg" CssClass="form-msg mt-3"></asp:Label>
+            <div class="form-actions mt-3">
+                <asp:Button Text="Save" runat="server" ID="cmdCreate" CssClass="btn btn-primary" OnClick="cmdCreate_Click" ValidationGroup="AdminSetup" />
+            </div>
+        </div>
+    </section>
 </asp:Content>

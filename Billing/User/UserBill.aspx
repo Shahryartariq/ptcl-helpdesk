@@ -1,166 +1,100 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/UserPanelMasterPage.Master" AutoEventWireup="true" CodeBehind="UserBill.aspx.cs" Inherits="PtclCustomerService.Billing.User.UserBill" %>
+﻿<%@ Page Title="Bills - PCS" Language="C#" MasterPageFile="~/UserPanelMasterPage.Master" AutoEventWireup="true" CodeBehind="UserBill.aspx.cs" Inherits="PtclCustomerService.Billing.User.UserBill" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <script src="../../Js/scripts.js"></script>
     <script src="../../Js/html2canvas.min.js"></script>
     <script src="../../Js/pdfmake.min.js"></script>
-
-    <script src="jsfiles/html2canvas.min.js"></script>
-    <script src="jsfiles/pdfmake.min.js"></script>
     <script type="text/javascript">
+        // saves the bill as a PDF (a picture of the bill inside a PDF page)
         function Export() {
             html2canvas(document.getElementById('target'), {
                 onrendered: function (canvas) {
-                    var data = canvas.toDataURL();
-                    var docDefinition = {
-                        content: [{
-                            image: data,
-                            width: 500
-                        }]
-                    };
-                    pdfMake.createPdf(docDefinition).download("AdmitCard.pdf");
-                    //alert("Admit Card Downloading Started");
+                    var docDefinition = { content: [{ image: canvas.toDataURL(), width: 500 }] };
+                    var month = document.getElementById('billMonth').textContent.trim() || 'bill';
+                    pdfMake.createPdf(docDefinition).download('PCS-bill-' + month + '.pdf');
                 }
             });
         }
     </script>
-
-    <script type="text/javascript">
-        function printDiv(divName) {
-            var pr = document.getElementById(divName).innerHTML;
-            var printContents = "<body style='height: 100px !important;'>";
-            printContents = printContents + pr;
-            printContents = printContents + "</body>";
-
-            var originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-
-            window.print();
-
-            document.body.innerHTML = originalContents;
-        }
-    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="container-fluid px-5 " id="print">
-        <h1 class="mx-4 text-center ">User Bill</h1>
 
-        <div class="row">
-            <div class="col-sm my-3">
-                <asp:RequiredFieldValidator runat="server" ID="RFV0" ControlToValidate="ddMonthList" SetFocusOnError="true" Text="*" InitialValue="0" ForeColor="Red"></asp:RequiredFieldValidator>
-                <asp:DropDownList ID="ddMonthList" runat="server" OnSelectedIndexChanged="listChange" AutoPostBack="true">
-                    <asp:ListItem Value="0">Select</asp:ListItem>
-                    <asp:ListItem Value="1">January</asp:ListItem>
-                    <asp:ListItem Value="2">February</asp:ListItem>
-                    <asp:ListItem Value="3">March</asp:ListItem>
-                    <asp:ListItem Value="4">April</asp:ListItem>
-                    <asp:ListItem Value="5">May</asp:ListItem>
-                    <asp:ListItem Value="6">June</asp:ListItem>
-                    <asp:ListItem Value="7">July</asp:ListItem>
-                    <asp:ListItem Value="8">August</asp:ListItem>
-                    <asp:ListItem Value="9">September</asp:ListItem>
-                    <asp:ListItem Value="10">October</asp:ListItem>
-                    <asp:ListItem Value="11">November</asp:ListItem>
-                    <asp:ListItem Value="12">December</asp:ListItem>
-                </asp:DropDownList>
-            </div>
-            <div class="col-sm">
-                <div style="text-align: right">
-                    <button onclick="printDiv('target')" class="btn btn-success"><i class="fa fa-print"></i>&nbsp;&nbsp;Print</button>
-                    <input type="button" id="btnExport" value="Export as PDF" onclick="Export()" class="btn btn-success">
-                </div>
-            </div>
+    <div class="page-head no-print">
+        <div>
+            <h1>Bills</h1>
+            <p>Your monthly bill. Print it or save it as a PDF.</p>
         </div>
-        <hr>
-
-        <asp:Panel runat="server" ID="panelBill" Visible="false">
-
-            <section id="target">
-                <div id="content">
-                    <div class="container my-5 card">
-                        <div class="d-flex justify-content-center row">
-                            <div class="col-md-8">
-                                <div class="p-3 bg-white rounded">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <h1 class="text-uppercase">PTCL Invoice</h1>
-                                            <div class="billed">
-                                                <span class="font-weight-bold text-uppercase">Customer Name: </span><span class="ml-1">
-                                                    <asp:Label CssClass="ml-1" runat="server" ID="lblBillName"></asp:Label></span>
-                                            </div>
-                                            <div class="billed">
-                                                <span class="font-weight-bold text-uppercase">
-                                                    <asp:Label runat="server" CssClass="ml-1" ID="lblDueDate"></asp:Label></span>
-                                            </div>
-                                            <div class="billed">
-                                                <span class="font-weight-bold text-uppercase">Consumer ID:</span><span class="ml-1">
-
-                                                    <asp:Label runat="server" CssClass="ml-1" ID="lbluserID"></asp:Label>
-                                                </span>
-                                            </div>
-                                            <div class="billed">
-                                                <span class="font-weight-bold text-uppercase">LandLine Number:</span><span class="ml-1">
-
-                                                    <asp:Label runat="server" ID="tblLandline"></asp:Label>
-                                                </span>
-                                            </div>
-                                            <div class="billed">
-                                                <span class="font-weight-bold text-uppercase">Location:</span><span class="ml-1">
-
-                                                    <asp:Label runat="server" ID="lblLocation"></asp:Label>
-                                                </span>
-                                            </div>
-
-                                            <div class="billed">
-                                                <span class="font-weight-bold text-uppercase">Billing Month:</span><span class="ml-1">
-
-                                                    <asp:Label runat="server" ID="lblMonth"></asp:Label>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 text-right mt-3">
-                                            <img src="../../assets/img/PCS_Logo.png" style="width: 200px" />
-                                        </div>
-                                    </div>
-                                    <div class="mt-3">
-                                        <div class="table-responsive">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Service</th>
-                                                        <th>Type</th>
-                                                        <th>Price</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Broadband Price </td>
-                                                        <td>8MB</td>
-                                                        <td>2080</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Line Rate</td>
-                                                        <td>2.5%</td>
-                                                        <td>280</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>#</td>
-                                                        <td>Total</td>
-                                                        <td>2360</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </asp:Panel>
-        <asp:Label runat="server" ID="lblNoBill" ForeColor="Red"></asp:Label>
-        <asp:Label runat="server" ID="lblNoMonth" ForeColor="Red"></asp:Label>
     </div>
+
+    <div class="bill-bar no-print">
+        <div class="field mb-0">
+            <label for="<%= ddMonthList.ClientID %>">Month</label>
+            <asp:DropDownList ID="ddMonthList" runat="server" CssClass="form-select" OnSelectedIndexChanged="listChange" AutoPostBack="true">
+                <asp:ListItem Value="0">Choose a month</asp:ListItem>
+                <asp:ListItem Value="1">January</asp:ListItem>
+                <asp:ListItem Value="2">February</asp:ListItem>
+                <asp:ListItem Value="3">March</asp:ListItem>
+                <asp:ListItem Value="4">April</asp:ListItem>
+                <asp:ListItem Value="5">May</asp:ListItem>
+                <asp:ListItem Value="6">June</asp:ListItem>
+                <asp:ListItem Value="7">July</asp:ListItem>
+                <asp:ListItem Value="8">August</asp:ListItem>
+                <asp:ListItem Value="9">September</asp:ListItem>
+                <asp:ListItem Value="10">October</asp:ListItem>
+                <asp:ListItem Value="11">November</asp:ListItem>
+                <asp:ListItem Value="12">December</asp:ListItem>
+            </asp:DropDownList>
+        </div>
+        <asp:Panel runat="server" ID="PanelActions" CssClass="page-actions" Visible="false">
+            <button type="button" onclick="window.print()" class="btn btn-secondary"><i class="fas fa-print me-1"></i> Print</button>
+            <button type="button" onclick="Export()" class="btn btn-primary"><i class="fas fa-file-download me-1"></i> Save as PDF</button>
+        </asp:Panel>
+    </div>
+
+    <asp:Label runat="server" ID="lblNoBill" CssClass="form-msg"></asp:Label>
+    <asp:Label runat="server" ID="lblNoMonth" CssClass="form-msg"></asp:Label>
+
+    <asp:Panel runat="server" ID="panelBill" Visible="false">
+        <article class="bill" id="target">
+            <header class="bill-head">
+                <div class="pcs-brand bill-brand">
+                    <span class="pcs-mark"><i class="fas fa-phone-alt"></i></span>
+                    <span class="pcs-brand-text"><strong>PCS</strong><span>Monthly bill</span></span>
+                </div>
+                <div class="bill-month">
+                    <span class="line-card-label">Billing month</span>
+                    <strong id="billMonth"><asp:Label runat="server" ID="lblMonth"></asp:Label></strong>
+                </div>
+            </header>
+
+            <div class="bill-parties">
+                <div>
+                    <span class="line-card-label">Billed to</span>
+                    <p class="bill-name"><asp:Label runat="server" ID="lblBillName"></asp:Label></p>
+                    <span class="landline"><asp:Label runat="server" ID="tblLandline"></asp:Label></span>
+                    <div class="text-muted"><asp:Label runat="server" ID="lblLocation"></asp:Label></div>
+                </div>
+                <dl class="facts facts-stack bill-meta">
+                    <dt>Consumer ID</dt>
+                    <dd class="num"><asp:Label runat="server" ID="lbluserID"></asp:Label></dd>
+                    <dt>Pay by</dt>
+                    <dd><asp:Label runat="server" ID="lblDueDate"></asp:Label></dd>
+                </dl>
+            </div>
+
+            <table class="table bill-table">
+                <thead>
+                    <tr><th>Service</th><th>Plan</th><th class="text-end">Amount (Rs)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Broadband</td><td>8 Mbps</td><td class="text-end num">2,080</td></tr>
+                    <tr><td>Line rent</td><td>2.5%</td><td class="text-end num">280</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr><td colspan="2">Total</td><td class="text-end num">2,360</td></tr>
+                </tfoot>
+            </table>
+
+            <p class="bill-note">Sample bill from a university project. It is not a real PTCL bill.</p>
+        </article>
+    </asp:Panel>
 </asp:Content>

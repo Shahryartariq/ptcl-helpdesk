@@ -16,19 +16,24 @@ namespace PtclCustomerService
             PendingGridView();
             ApprovedGridView();
             RegeneratedGridView();
-            if (Request.QueryString["Active"] == "1")
+            bool closed = Request.QueryString["Closed"] == "1";
+            bool again = Request.QueryString["Rcomp"] == "1";
+            if (Request.QueryString["Active"] == "1" || (!closed && !again))
             {
-                lblTitle.Text = "Active Complaints";
+                lblTitle.Text = "Complaints";
+                PendingComplaint.CssClass += " active";
                 PanelPendingComplaint.CssClass = " ";
             }
             if (Request.QueryString["Closed"] == "1")
             {
-                lblTitle.Text = "Closed Complaints";
+                lblTitle.Text = "Complaints";
+                ApprovedComplaint.CssClass += " active";
                 PanelApprovedComplaint.CssClass = " ";
             }
             if (Request.QueryString["Rcomp"] == "1")
             {
-                lblTitle.Text = "Regenerated Complaints";
+                lblTitle.Text = "Complaints";
+                RegeneratedComplaint.CssClass += " active";
                 PanelRegeneratedComplaint.CssClass = " ";
             }
         }
@@ -48,7 +53,7 @@ namespace PtclCustomerService
                 }
                 else
                 {
-                    lblTablePendingMsg.Text = "No Record to Show";
+                    lblTablePendingMsg.Text = "No complaints are waiting. Nice work.";
                 }
             }
         }
@@ -67,7 +72,7 @@ namespace PtclCustomerService
                 }
                 else
                 {
-                    lblTableClosedMsg.Text = "No Record to Show";
+                    lblTableClosedMsg.Text = "No complaints have been solved yet.";
                 }
             }
         }
@@ -85,7 +90,7 @@ namespace PtclCustomerService
                 }
                 else
                 {
-                    lblTableRegeneratedMsg.Text = "No Record to Show";
+                    lblTableRegeneratedMsg.Text = "No customer has raised a complaint again.";
                 }
             }
         }

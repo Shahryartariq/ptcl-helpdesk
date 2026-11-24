@@ -34,12 +34,12 @@ namespace PtclCustomerService
 
                 if (a == null || !PasswordHasher.Verify(txtPassword.Text, a.Password))
                 {
-                    lblMsg.Text = "Invalid Username or Password";
+                    lblMsg.Text = "That username and password don't match an admin account.";
                     return;
                 }
                 if (a.Status == false)
                 {
-                    lblMsg.Text = "This admin account is inactive";
+                    lblMsg.Text = "This admin account is inactive.";
                     return;
                 }
 

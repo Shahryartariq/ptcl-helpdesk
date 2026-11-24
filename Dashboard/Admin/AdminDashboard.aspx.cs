@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using PtclCustomerService.Models;
+using System;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace PtclCustomerService.Dashboard.Admin
@@ -13,22 +11,24 @@ namespace PtclCustomerService.Dashboard.Admin
         {
             HyperLink activeHyp = Master.FindControl("HypDashBoard") as HyperLink;
             activeHyp.CssClass += " active";
-
             using (PTCLEntities db = new PTCLEntities())
             {
                 if (Session["AdminID"] != null)
                 {
-                    var totalCustomerCount = db.GetPtclUsers().ToList();
-                    int counCustomer = totalCustomerCount.Count;
-                    lblTotalCustomers.Text = counCustomer.ToString();
+                    lblTotalCustomers.Text = db.GetPtclUsers().ToList().Count.ToString();
+                    LblTotalAdmins.Text = db.GetPtclAdmins().ToList().Count.ToString();
 
-                    var totalAdminCount = db.GetPtclAdmins().ToList();
-                    int counAdmins = totalAdminCount.Count;
-                    LblTotalAdmins.Text = counAdmins.ToString();
+                    var complaints = db.GetComplaints().ToList();
+                    lblTotalComplaints.Text = complaints.Count.ToString();
+                    lblSolved.Text = complaints.Count(c => c.ComplaintStatus == true).ToString();
 
-                    var totalComplaints = db.GetComplaints().ToList();
-                    int mytotalComplaints = totalComplaints.Count;
-                    lblTotalComplaints.Text = mytotalComplaints.ToString();
+                    // oldest first: they have waited the longest
+                    var open = db.ActiveC().ToList();
+                    lblOpen.Text = open.Count.ToString();
+                    RptOpen.DataSource = open.OrderBy(c => c.ComplaintCreationDate).Take(6).ToList();
+                    RptOpen.DataBind();
+                    RptOpen.Visible = open.Count > 0;
+                    PanelAllDone.Visible = open.Count == 0;
                 }
             }
         }

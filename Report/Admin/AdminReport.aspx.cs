@@ -27,17 +27,17 @@ namespace PtclCustomerService.Report.Admin
 
                 var MainCategory = db.GetPtclAdmins().ToList();
                 ddlAdmins.DataSource = MainCategory;
-                ddlAdmins.DataTextField = "UserName";
+                ddlAdmins.DataTextField = "FullName";
                 ddlAdmins.DataValueField = "AdminID";
                 ddlAdmins.DataBind();
-                ddlAdmins.Items.Insert(0, new ListItem("--Select--", "0"));
+                ddlAdmins.Items.Insert(0, new ListItem("All admins", "0"));
 
                 var SubCategory = db.spGetLocation().ToList();
                 ddlLocation.DataSource = SubCategory;
                 ddlLocation.DataTextField = "LocationName";
                 ddlLocation.DataValueField = "LocationID";
                 ddlLocation.DataBind();
-                ddlLocation.Items.Insert(0, new ListItem("--Select--", "0"));
+                ddlLocation.Items.Insert(0, new ListItem("All cities", "0"));
             }
         }
 
@@ -62,7 +62,7 @@ namespace PtclCustomerService.Report.Admin
             }
             else
             {
-                lblAdminmsg.Text = "No Record to Show";
+                lblAdminmsg.Text = "No solved complaints match these filters.";
             }
         }
 

@@ -2,41 +2,48 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head runat="server">
-    <title>Admin Login | PCS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staff login - PCS</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="Css/bootstrap.min.css" rel="stylesheet" />
+    <link href="Css/pcs.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4"></div>
-                <div class="col-lg-4 card" style="margin-top: 10%;">
-                    <div class="form-group mt-4">
-                        <h4 class="text-center">Login as Admin</h4>
-                        <label>UserName: </label>
-                        <asp:RequiredFieldValidator runat="server" ID="RFV1" ControlToValidate="txtUserName" SetFocusOnError="true" ErrorMessage="*" ForeColor="Red"  ValidationGroup="LoginUser"></asp:RequiredFieldValidator>
-                        <asp:TextBox runat="server" ID="txtUserName" CssClass="form-control"></asp:TextBox>
+        <div class="auth">
+            <aside class="auth-side">
+                <span class="pcs-brand"><span class="pcs-mark"><i class="fas fa-phone-alt"></i></span><span class="pcs-brand-text"><strong>PCS</strong><span>PTCL Customer Service</span></span></span>
+                <h1>Support team</h1>
+                <p>Sign in to see open complaints, resolve them and keep customer accounts up to date.</p>
+            </aside>
+            <main class="auth-main">
+                <div class="auth-form">
+                    <h2>Staff login</h2>
+                    <p>For the PCS support team.</p>
 
+                    <div class="field">
+                        <label for="txtUserName">Username</label>
+                        <asp:TextBox runat="server" ID="txtUserName" CssClass="form-control" autocomplete="username"></asp:TextBox>
+                        <asp:RequiredFieldValidator runat="server" ID="RFV1" ControlToValidate="txtUserName" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Enter your username" ValidationGroup="LoginUser"></asp:RequiredFieldValidator>
                     </div>
-                    <div class="form-group mt-4">
-                        <label>Password: </label>
-                        <asp:RequiredFieldValidator runat="server" ID="RFV2" ControlToValidate="txtPassword" SetFocusOnError="true" ErrorMessage="*" ForeColor="Red"  ValidationGroup="LoginUser"></asp:RequiredFieldValidator>
-                        <asp:TextBox runat="server" ID="txtPassword" CssClass="form-control" TextMode="Password"></asp:TextBox>
+                    <div class="field">
+                        <label for="txtPassword">Password</label>
+                        <asp:TextBox runat="server" ID="txtPassword" CssClass="form-control" TextMode="Password" autocomplete="current-password"></asp:TextBox>
+                        <asp:RequiredFieldValidator runat="server" ID="RFV2" ControlToValidate="txtPassword" SetFocusOnError="true" Display="Dynamic" CssClass="field-error" ErrorMessage="Enter your password" ValidationGroup="LoginUser"></asp:RequiredFieldValidator>
+                    </div>
 
-                    </div>
-                    <div class="form-group mt-4 mb-2">
-                        <asp:Button Text="Login Admin" runat="server" ID="cmdLoginAdmin" CssClass="btn btn-primary w-100 mb-4" OnClick="cmdLoginAdmin_Click"  ValidationGroup="LoginUser" />
-                        <asp:Button Text="SignUp User" runat="server" ID="cmdSignup" CssClass="btn btn-primary w-50" OnClick="cmdSignup_Click" />
-                        <asp:Button Text="Login as User" runat="server" ID="cmdLoginUser" CssClass="btn btn-primary" Style="width: 48%;" OnClick="cmdLoginUser_Click" />
-                        <div>
-                            <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
-                        </div>
+                    <asp:Label runat="server" ID="lblMsg" CssClass="form-msg"></asp:Label>
+                    <asp:Button Text="Log in" runat="server" ID="cmdLoginAdmin" CssClass="btn btn-primary" OnClick="cmdLoginAdmin_Click" ValidationGroup="LoginUser" />
+
+                    <div class="auth-switch">
+                        <div>A customer? <asp:Button Text="Customer login" runat="server" ID="cmdLoginUser" CssClass="btn-link" OnClick="cmdLoginUser_Click" CausesValidation="false" /></div>
+                        <div class="mt-1">No account yet? <asp:Button Text="Create one" runat="server" ID="cmdSignup" CssClass="btn-link" OnClick="cmdSignup_Click" CausesValidation="false" /></div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </form>
 </body>
