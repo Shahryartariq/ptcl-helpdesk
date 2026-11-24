@@ -1,70 +1,54 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/AdminPanelMasterPage.Master" AutoEventWireup="true" CodeBehind="AdminManageCustomers.aspx.cs" Inherits="PtclCustomerService.AdminPanel" %>
+﻿<%@ Page Title="Customers - PCS" Language="C#" MasterPageFile="~/AdminPanelMasterPage.Master" AutoEventWireup="true" CodeBehind="AdminManageCustomers.aspx.cs" Inherits="PtclCustomerService.AdminPanel" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <script src="../../Js/scripts.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
-            $('#GVCustomers').DataTable();
+            $('#GVCustomers').DataTable({
+                "order": [],
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                "language": { "search": "Search", "lengthMenu": "Show _MENU_", "info": "_START_ to _END_ of _TOTAL_", "infoEmpty": "", "infoFiltered": "(filtered from _MAX_)", "zeroRecords": "Nothing matches your search" }
+            });
         });
-        /*$(function () {
-            $("[id*=GV]").DataTable(
-                {
-                    bLengthChange: true,
-                    lengthMenu: [[5, 10, -1], [5, 10, "All"]],
-                    bFilter: true,
-                    bSort: true,
-                    bPaginate: true
-                });
-        });*/
     </script>
-    <style>
-        .dataTables_filter {
-            margin-bottom: 1%;
-        }
-
-        /* .dataTables_filter input {
-        border-radius: 115px;
-        }
-        .dataTables_filter {
-            margin-top: 20px;
-            margin-bottom: 20px;
-
-        }
-        .dataTables_length{
-               margin-top:20px;
-            margin-bottom: 20px;
-        }*/
-    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-
-    <!-- Contnet Start -->
-
-    <!-- Contnet Start -->
-    <h3 class="text-center my-3 text-success ">Our PTCL Customers</h3>
-    <div class="card mb-4">
-        <div class="card-body">
-
-            <asp:GridView runat="server" ID="GVCustomers" ClientIDMode="Static" CssClass="display compact table table-bordered table-hover table-responsive" AutoGenerateColumns="false" OnRowCommand="GV_RowCommand" OnRowDeleting="GV_RowDeleting" OnRowEditing="GV_RowEditing">
-                <Columns>
-                    <asp:BoundField DataField="FirstName" HeaderText="First Name" />
-                    <asp:BoundField DataField="EmailAddress" HeaderText="Email" />
-                    <asp:BoundField DataField="Cnic" HeaderText="Cnic" />
-                    <asp:BoundField DataField="Status" HeaderText="Status" />
-                    <asp:TemplateField HeaderText="Action">
-                        <ItemTemplate>
-                            <!-- userid-->
-                            <asp:LinkButton runat="server" ID="lnkEdit" Text="Edit" CommandName="edit" CommandArgument='<%# Bind("UserID") %>'></asp:LinkButton>
-                            /
-                                <asp:LinkButton runat="server" ID="lnkDelete" Text="Delete" CommandName="delete" CommandArgument='<%# Bind("UserID") %>' OnClientClick="return confirm('Are you sure you want to delete this Customer?');"></asp:LinkButton>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
-            <asp:Label runat="server" ID="lblCustomersMsg" CssClass="text-center" ForeColor="Red"></asp:Label>
+    <div class="page-head">
+        <div>
+            <h1>Customers</h1>
+            <p>Everyone with a PCS account. Open a customer to see their complaints.</p>
         </div>
     </div>
+
+    <section class="panel">
+        <div class="panel-body">
+            <div class="table-wrap">
+                <asp:GridView runat="server" ID="GVCustomers" ClientIDMode="Static" CssClass="table" GridLines="None" AutoGenerateColumns="false" OnRowCommand="GV_RowCommand" OnRowDeleting="GV_RowDeleting" OnRowEditing="GV_RowEditing">
+                    <Columns>
+                        <asp:TemplateField HeaderText="Customer">
+                            <ItemTemplate>
+                                <a href="<%# ResolveUrl("~/ManageAccounts/Admin/AdminCustomersProfile.aspx?UserID=" + Eval("UserID")) %>"><%# PtclCustomerService.Ui.Text(string.Concat(Eval("FirstName"), " ", Eval("LastName"))) %></a>
+                                <div class="text-muted small"><%# PtclCustomerService.Ui.Text(Eval("EmailAddress")) %></div>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField DataField="Phone" HeaderText="Mobile" ItemStyle-CssClass="num" />
+                        <asp:BoundField DataField="Cnic" HeaderText="CNIC" ItemStyle-CssClass="num" />
+                        <asp:TemplateField HeaderText="Account">
+                            <ItemTemplate><%# PtclCustomerService.Ui.Account(Eval("Status")) %></ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField>
+                            <ItemStyle CssClass="text-end text-nowrap" />
+                            <ItemTemplate>
+                                <asp:LinkButton runat="server" ID="lnkEdit" CssClass="btn btn-sm btn-secondary" CommandName="edit" CommandArgument='<%# Bind("UserID") %>'>Edit</asp:LinkButton>
+                                <asp:LinkButton runat="server" ID="lnkDelete" CssClass="btn btn-sm btn-danger" CommandName="delete" CommandArgument='<%# Bind("UserID") %>' OnClientClick="return confirm('Delete this customer and all their complaints? This can\'t be undone.');">Delete</asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+            <asp:Label runat="server" ID="lblCustomersMsg" CssClass="empty d-block"></asp:Label>
+        </div>
+    </section>
 </asp:Content>

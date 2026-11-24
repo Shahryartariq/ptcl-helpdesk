@@ -48,7 +48,7 @@ namespace PtclCustomerService
                 txtEmail.Text = s.EmailAddress;
                 txtPhone.Text = s.Phone;
                 txtCnic.Text = s.Cnic;
-                lblCustomer.Text = "Manage " + HttpUtility.HtmlEncode(s.FirstName);
+                lblCustomer.Text = "Edit " + HttpUtility.HtmlEncode(s.FirstName + " " + s.LastName);
                 ddlStatus.SelectedValue = s.Status ? "1" : "0";
             }
         }
@@ -69,7 +69,7 @@ namespace PtclCustomerService
                 string email = txtEmail.Text.Trim();
                 if (db.tblPtclUsers.Any(v => v.EmailAddress == email && v.UserID != UserID))
                 {
-                    lblMsg.Text = "Email Already Taken";
+                    lblMsg.Text = "Another account already uses this email.";
                     return;
                 }
 
@@ -84,8 +84,9 @@ namespace PtclCustomerService
                     s.Password = PasswordHasher.Hash(txtPassword.Text);
                 }
                 db.SaveChanges();
-                lblCustomer.Text = "Manage " + HttpUtility.HtmlEncode(s.FirstName);
-                lblMsg.Text = "Customer Updated Successfully";
+                lblCustomer.Text = "Edit " + HttpUtility.HtmlEncode(s.FirstName + " " + s.LastName);
+                lblMsg.CssClass = "form-msg ok mt-3";
+                lblMsg.Text = "Customer saved.";
             }
         }
     }

@@ -14,11 +14,12 @@ namespace PtclCustomerService
         {
             if (Request.QueryString["Email"] == "1")
             {
-                lblEmailMessage.Text = "Email Sent to the Customer Successfully";
+                lblEmailMessage.CssClass = "form-msg ok";
+                lblEmailMessage.Text = "Marked as solved. The customer has been emailed.";
             }
             if (Request.QueryString["Email"] == "0")
             {
-                lblEmailMessage.Text = "Complaint Resolved, but the Email to the Customer could not be Sent";
+                lblEmailMessage.Text = "Marked as solved, but the email to the customer could not be sent. Check Secrets.config.";
             }
 
             hypCacnel.NavigateUrl = "~/Complaints/Admin/AdminComplaint.aspx?Active=1";
@@ -32,9 +33,18 @@ namespace PtclCustomerService
                     Response.Redirect("~/Errors/404NotFound.aspx");
                 }
 
-                AddText(PanelCID, "Complaint ID: " + s.ComplaintID.ToString());
+                lblNo.Text = s.ComplaintID.ToString();
+                lblTitle.Text = HttpUtility.HtmlEncode(s.ComplaintTitle);
+                lblDescription.Text = HttpUtility.HtmlEncode(s.ComplaintDescription);
+                lblDate.Text = Ui.Date(s.ComplaintCreationDate);
+                litStatus.Text = Ui.Status(s.ComplaintStatus, s.RegeneratedID);
 
-                // Download File
+                if (s.ComplaintStatus == true)
+                {
+                    PanelResolveComplaint.Visible = false;
+                    hypCacnel.NavigateUrl = "~/Complaints/Admin/AdminComplaint.aspx?Closed=1";
+                }
+
                 if (!string.IsNullOrEmpty(s.ComplaintImage))
                 {
                     HypDownloadUpload.NavigateUrl = "~/UploadFiles/ComplaintData/" + s.ComplaintImage;
@@ -42,47 +52,25 @@ namespace PtclCustomerService
                 else
                 {
                     HypDownloadUpload.NavigateUrl = "";
-                    HypDownloadUpload.Text = "NO FILE TO DOWNLOAD";
+                    HypDownloadUpload.Text = "None";
+                    HypDownloadUpload.CssClass = "text-muted";
                 }
 
-                AddText(PanelComplaintTitle, s.ComplaintTitle);
-
-                if (s.ComplaintStatus == true)
-                {
-                    AddText(PanelStatusComplaint, "Solved");
-                    PanelResolveComplaint.CssClass = " d-none";
-                    hypCacnel.NavigateUrl = "~/Complaints/Admin/AdminComplaint.aspx?Closed=1";
-                }
-                else
-                {
-                    AddText(PanelStatusComplaint, "Not Solved");
-                }
-
-                AddText(PanelComplaintDescription, s.ComplaintDescription);
-                AddText(PanelCreation, s.ComplaintCreationDate.ToString());
-
-                // Regenerated
                 if (s.RegeneratedID.HasValue && s.RegeneratedID.Value > 0)
                 {
-                    AddText(PanelRegenerate, "Yes");
+                    lblRegenerated.Text = "Yes, from ";
                     HypParentComplaint.Visible = true;
-                    HypParentComplaint.Text = "Goto Parent";
+                    HypParentComplaint.Text = "complaint #" + s.RegeneratedID;
                     HypParentComplaint.NavigateUrl = "~/Complaints/Admin/AdminComplaintDetails.aspx?ComplaintID=" + s.RegeneratedID;
                 }
-                else
-                {
-                    AddText(PanelRegenerate, "No");
-                }
 
-                // User Data
                 var userid = s.UserID;
                 tblPtclUser a = db.tblPtclUsers.FirstOrDefault(b => b.UserID == userid);
                 if (a != null)
                 {
-                    AddText(PanelFullName, a.FirstName + " " + a.LastName);
-                    AddText(PanelFirstName, a.FirstName);
-                    AddText(PanelEmail, a.EmailAddress);
-                    AddText(PanelPhone, a.Phone);
+                    lblFullName.Text = HttpUtility.HtmlEncode(a.FirstName + " " + a.LastName);
+                    lblEmail.Text = HttpUtility.HtmlEncode(a.EmailAddress);
+                    lblPhone.Text = HttpUtility.HtmlEncode(a.Phone);
                     if (!string.IsNullOrEmpty(a.CustomerDP))
                     {
                         CustomerPic.ImageUrl = "~/UploadFiles/CustomerProfile/" + a.CustomerDP;
@@ -93,16 +81,8 @@ namespace PtclCustomerService
 
                 var complaintTypeID = s.ComplaintTypeID;
                 tblComplaintType c = db.tblComplaintTypes.FirstOrDefault(d => d.ComplaintTypeID == complaintTypeID);
-                AddText(PanelComplaintType, c != null ? c.ComplaintTypeName : "");
+                lblType.Text = c != null ? HttpUtility.HtmlEncode(c.ComplaintTypeName) : "";
             }
-        }
-
-        // text from the database is encoded, so a title like "<script>" shows as text
-        private static void AddText(Panel panel, string text)
-        {
-            Label label = new Label();
-            label.Text = HttpUtility.HtmlEncode(text);
-            panel.Controls.Add(label);
         }
 
         protected void btnResolve_Click(object sender, EventArgs e)

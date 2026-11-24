@@ -28,8 +28,13 @@ namespace PtclCustomerService
                 RFV6.Enabled = false;
             }
 
+            if (Editing)
+            {
+                lblHeading.Text = "Edit admin";
+            }
             if ((Request.QueryString["profile"] == "me"))
             {
+                lblHeading.Text = "Edit my profile";
                 HypCancel.NavigateUrl = "~/ManageAccounts/Admin/AdminProfile.aspx";
             }
 
@@ -68,12 +73,12 @@ namespace PtclCustomerService
                 // taken by another admin (when editing, the admin's own values are fine)
                 if (db.tblAdmins.Any(v => v.UserName == userName && v.AdminID != AdminID))
                 {
-                    lblMsg.Text = "UserName Already Taken";
+                    lblMsg.Text = "Another admin already uses this username.";
                     return;
                 }
                 if (db.tblAdmins.Any(v => v.EmailAddress == email && v.AdminID != AdminID))
                 {
-                    lblMsg.Text = "Email Already Taken";
+                    lblMsg.Text = "Another admin already uses this email.";
                     return;
                 }
 
@@ -127,13 +132,15 @@ namespace PtclCustomerService
                 if (Editing)
                 {
                     db.SaveChanges();
-                    lblMsg.Text = "Admin Updated Successfully";
+                    lblMsg.CssClass = "form-msg ok mt-3";
+                    lblMsg.Text = "Saved.";
                 }
                 else
                 {
                     db.tblAdmins.Add(s);
                     db.SaveChanges();
-                    lblMsg.Text = "Admin Inserted Successfully";
+                    lblMsg.CssClass = "form-msg ok mt-3";
+                    lblMsg.Text = "Admin added. They can log in now.";
                     txtUserName.Text = "";
                     txtFullName.Text = "";
                     txtEmailAddress.Text = "";

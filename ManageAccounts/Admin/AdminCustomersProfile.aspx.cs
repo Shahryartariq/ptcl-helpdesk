@@ -1,9 +1,7 @@
 ﻿using PtclCustomerService.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace PtclCustomerService.ManageAccounts.Admin
@@ -12,82 +10,52 @@ namespace PtclCustomerService.ManageAccounts.Admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["UserID"] != null)
+            HyperLink activeHyp = Master.FindControl("HypAdminPanel") as HyperLink;
+            activeHyp.CssClass += " active";
+            if (Request.QueryString["UserID"] == null)
             {
-                using (PTCLEntities db = new PTCLEntities())
+                Response.Redirect("~/ManageCustomers/Admin/AdminManageCustomers.aspx");
+            }
+
+            using (PTCLEntities db = new PTCLEntities())
+            {
+                int UserID = Convert.ToInt32(Request.QueryString["UserID"]);
+                tblPtclUser a = db.tblPtclUsers.FirstOrDefault(b => b.UserID == UserID);
+                if (a == null)
                 {
-                    int UserID = Convert.ToInt32(Request.QueryString["UserID"]);
-                    tblPtclUser a = db.tblPtclUsers.FirstOrDefault(b => b.UserID == UserID);
-                    if (a == null)
-                    {
-                        Response.Redirect("~/Errors/404NotFound.aspx");
-                    }
+                    Response.Redirect("~/Errors/404NotFound.aspx");
+                }
 
-                    //Total Comapints
-                    var GetMyComplaints = db.GetMyComplaints(UserID).ToList();
-                    int countTotalCom = GetMyComplaints.Count;
-                    //Response.Write(countTotalCom);
-                    Label lblTotalC = new Label();
-                    lblTotalC.Text = countTotalCom.ToString();
-                    PanelTotalC.Controls.Add(lblTotalC);
+                var complaints = db.GetMyComplaints(UserID).ToList();
+                lblTotalC.Text = complaints.Count.ToString();
+                lblActiveC.Text = db.GetCustomerActiveComplaint(UserID).ToList().Count.ToString();
+                RptComplaints.DataSource = complaints;
+                RptComplaints.DataBind();
+                RptComplaints.Visible = complaints.Count > 0;
 
-                    //Active Comapints
-                    var ActiveComplaints = db.GetCustomerActiveComplaint(UserID).ToList();
-                    int countActiveCom = ActiveComplaints.Count;
-                    //Response.Write(countTotalCom);
-                    Label lblActiveC = new Label();
-                    lblActiveC.Text = countActiveCom.ToString();
-                    PanelActiveC.Controls.Add(lblActiveC);
+                lblFullName.Text = HttpUtility.HtmlEncode(a.FirstName + " " + a.LastName);
+                litStatus.Text = "Customer &nbsp; " + Ui.Account(a.Status);
+                lblEmail.Text = HttpUtility.HtmlEncode(a.EmailAddress);
+                lblCnic.Text = HttpUtility.HtmlEncode(a.Cnic);
+                lblPhone.Text = HttpUtility.HtmlEncode(a.Phone);
 
-                    Label lblFirstName = new Label();
-                    lblFirstName.Text = HttpUtility.HtmlEncode(a.FirstName);
-                    PanelFirstName.Controls.Add(lblFirstName);
+                tblUserLocation l = db.tblUserLocations.FirstOrDefault(x => x.LocationID == a.LocationID);
+                lblLandline.Text = l == null ? HttpUtility.HtmlEncode(a.landline) : Ui.Landline(l.LocationCode, a.landline);
+                lblLocation.Text = l == null ? "No city set" : HttpUtility.HtmlEncode(l.LocationName);
 
+                userPic.ImageUrl = string.IsNullOrEmpty(a.CustomerDP)
+                    ? "~/assets/img/avatar.png"
+                    : "~/UploadFiles/CustomerProfile/" + a.CustomerDP;
 
-                    Label LblFullName = new Label();
-                    LblFullName.Text = HttpUtility.HtmlEncode(a.FirstName + " " + a.LastName);
-                    PanelFullName.Controls.Add(LblFullName);
-
-                    Label lblEmail = new Label();
-                    lblEmail.Text = HttpUtility.HtmlEncode(a.EmailAddress);
-                    PanelEmail.Controls.Add(lblEmail);
-
-                    Label lblCnic = new Label();
-                    lblCnic.Text = HttpUtility.HtmlEncode(a.Cnic);
-                    PanelCnic.Controls.Add(lblCnic);
-
-                    Label lblPhone = new Label();
-                    lblPhone.Text = HttpUtility.HtmlEncode(a.Phone);
-                    PanelPhone.Controls.Add(lblPhone);
-
-                    Label lblStatus = new Label();
-                    if (a.Status.ToString() == "True")
-                    {
-                        lblStatus.Text = "Status (Active)";
-                    }
-                    else
-                    {
-                        lblStatus.Text = "Status (Inactive)";
-                    }
-                    PanelStatus.Controls.Add(lblStatus);
-
-                    if (a.CustomerDP != "" && a.CustomerDP != null)
-                    {
-                        userPic.ImageUrl = "../../UploadFiles/CustomerProfile/" + a.CustomerDP;
-                    }
-                    else
-                    {
-                        userPic.ImageUrl = "../../assets/img/avatar.png";
-                    }
-
-                    HypEditProfile.NavigateUrl = "~/ManageCustomers/Admin/CustomerSetup.aspx?UserID=" + UserID;
-                    HypBack.NavigateUrl = "~/ManageCustomers/Admin/AdminManageCustomers.aspx";
-                    if (Request.QueryString["ComplaintID"] != null)
-                    {
-                        int ComplaintID = Convert.ToInt32(Request.QueryString["ComplaintID"]);
-                        HypEditProfile.NavigateUrl = "~/ManageCustomers/Admin/CustomerSetup.aspx?UserID=" + UserID + "&back=1" + "&ComplaintID=" + ComplaintID;
-                        HypBack.NavigateUrl = "~/Complaints/Admin/AdminComplaintDetails.aspx?ComplaintID=" + ComplaintID;
-                    }
+                HypEditProfile.NavigateUrl = "~/ManageCustomers/Admin/CustomerSetup.aspx?UserID=" + UserID;
+                HypBack.NavigateUrl = "~/ManageCustomers/Admin/AdminManageCustomers.aspx";
+                HypBack.Text = "<i class=\"fas fa-arrow-left me-1\"></i> Customers";
+                if (Request.QueryString["ComplaintID"] != null)
+                {
+                    int ComplaintID = Convert.ToInt32(Request.QueryString["ComplaintID"]);
+                    HypEditProfile.NavigateUrl = "~/ManageCustomers/Admin/CustomerSetup.aspx?UserID=" + UserID + "&back=1" + "&ComplaintID=" + ComplaintID;
+                    HypBack.NavigateUrl = "~/Complaints/Admin/AdminComplaintDetails.aspx?ComplaintID=" + ComplaintID;
+                    HypBack.Text = "<i class=\"fas fa-arrow-left me-1\"></i> Complaint #" + ComplaintID;
                 }
             }
         }
