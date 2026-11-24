@@ -26,7 +26,7 @@ namespace PtclCustomerService
                     // account deleted or set to inactive while logged in
                     Response.Redirect("~/Logout.aspx");
                 }
-                lblName.Text = "Login as: " + HttpUtility.HtmlEncode(s.UserName);
+                lblName.Text = "Signed in as " + HttpUtility.HtmlEncode(s.UserName);
             }
         }
     }

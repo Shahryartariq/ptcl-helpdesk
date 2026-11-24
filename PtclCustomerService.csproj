@@ -85,7 +85,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\img\404.svg" />
     <Content Include="Billing\Admin\adminBill.aspx" />
     <Content Include="Billing\Admin\Download.aspx" />
     <Content Include="Billing\User\UserBill.aspx" />
@@ -106,19 +105,17 @@
     <Content Include="assets\demo\datatables-demo.js" />
     <Content Include="assets\img\avatar.png" />
     <Content Include="Css\bootstrap.min.css" />
-    <Content Include="Css\GlobalStyle.css" />
-    <Content Include="Css\Home.css" />
-    <Content Include="Css\styles.css" />
+    <Content Include="Css\pcs.css" />
+    <Content Include="Js\pcs.js" />
+    <Content Include="Fonts\lexend-latin-400-normal.woff2" />
+    <Content Include="Fonts\lexend-latin-500-normal.woff2" />
+    <Content Include="Fonts\lexend-latin-600-normal.woff2" />
+    <Content Include="Fonts\Lexend-OFL.txt" />
     <Content Include="Global.asax" />
     <Content Include="Home.aspx" />
-    <Content Include="Js\datatables-simple-demo.js" />
-    <Content Include="Js\JQuery.js" />
-    <Content Include="Js\scripts.js" />
     <Content Include="Logout.aspx" />
     <Content Include="ManageAccounts\Admin\ManageAdmins.aspx" />
     <Content Include="ManageAccounts\User\UserProfile.aspx" />
-    <Content Include="assets\img\HomeCover.jpg" />
-    <Content Include="assets\img\PCS_Logo.png" />
     <Content Include="ManageCustomers\Admin\AdminManageCustomers.aspx" />
     <Content Include="ManageCustomers\Admin\CustomerSetup.aspx" />
     <Content Include="Models\PtclModel1.Context.tt">
@@ -187,6 +184,7 @@
     <Compile Include="AuthCookie.cs" />
     <Compile Include="Locations.cs" />
     <Compile Include="PasswordHasher.cs" />
+    <Compile Include="Ui.cs" />
     <Compile Include="Uploads.cs" />
     <Compile Include="Email.cs" />
     <Compile Include="Errors\404NotFound.aspx.cs">
