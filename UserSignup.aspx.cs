@@ -16,6 +16,7 @@ namespace PtclCustomerService
             using (PTCLEntities db = new PTCLEntities())
             {
                 Locations.Fill(ddlLocationCode, db.spGetLocation().ToList());
+                ddlLocationCode.Items.Insert(0, new ListItem("Choose your city", ""));
             }
         }
 
@@ -30,12 +31,12 @@ namespace PtclCustomerService
 
                 if (db.tblPtclUsers.Any(v => v.EmailAddress == email))
                 {
-                    lblMsg.Text = "Email Already Taken";
+                    lblMsg.Text = "An account already uses this email. Try logging in instead.";
                     return;
                 }
                 if (db.tblPtclUsers.Any(v => v.landline == landline))
                 {
-                    lblMsg.Text = "LandLine Already Taken";
+                    lblMsg.Text = "This landline number is already registered.";
                     return;
                 }
 
@@ -61,7 +62,8 @@ namespace PtclCustomerService
 
                 db.tblPtclUsers.Add(u);
                 db.SaveChanges();
-                lblMsg.Text = "Registration Completed Successfully. You can login now";
+                lblMsg.CssClass = "form-msg ok";
+                lblMsg.Text = "Your account is ready. You can log in now.";
             }
         }
 

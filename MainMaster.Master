@@ -2,92 +2,44 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 <head runat="server">
-    <title></title>
-    <!--Javascript jo all pages ma same ho -->
-    <script src="Js/JQuery.js"></script>
+    <title>PCS - PTCL Customer Service</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="Css/bootstrap.min.css" rel="stylesheet" />
-    <link href="Css/GlobalStyle.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-
-    <!-- Optional JavaScript; choose one of the two! -->
-
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="Css/pcs.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
 
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-            <!--Side nav/ navigation/ jagah reserve kr sakta haan jahan -->
+        <header class="site-head">
+            <div class="site-wrap site-head-inner">
+                <a class="pcs-brand site-brand" href="<%= ResolveUrl("~/Home.aspx") %>">
+                    <span class="pcs-mark"><i class="fas fa-phone-alt"></i></span>
+                    <span class="pcs-brand-text"><strong>PCS</strong><span>PTCL Customer Service</span></span>
+                </a>
+                <nav class="site-nav" aria-label="Main">
+                    <a href="#plans">Packages</a>
+                    <asp:HyperLink ID="HypLogin" runat="server" Text="Log in" NavigateUrl="~/UserLogin.aspx" Visible="false"></asp:HyperLink>
+                    <asp:HyperLink ID="HypUserPanel" runat="server" Text="My dashboard" CssClass="btn btn-primary btn-sm" NavigateUrl="~/Dashboard/User/UserDashboard.aspx" Visible="false"></asp:HyperLink>
+                    <asp:HyperLink ID="HypAdminPanel" runat="server" Text="Admin dashboard" CssClass="btn btn-primary btn-sm" NavigateUrl="~/Dashboard/Admin/AdminDashboard.aspx" Visible="false"></asp:HyperLink>
+                    <asp:HyperLink ID="HypLogout" runat="server" Text="Log out" NavigateUrl="~/Logout.aspx" Visible="false"></asp:HyperLink>
+                </nav>
+            </div>
+        </header>
 
-            <!--NavBar Start -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="./Home.aspx">
-                        <img src="assets/img/PCS_Logo.png" alt="Logo_PTCL" class="Logo" /></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link active h4 " href="#">Home</a>
-                            </li>
-                            <li class="nav-item h4">
-                                <a class="nav-link" href="#">Packages</a>
-                            </li>
-                            <li class="nav-item h4">
-                                <a class="nav-link" href="#">Contact</a>
-                            </li>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        </asp:ContentPlaceHolder>
 
-                            <li class="nav-item h4">
-                                <asp:HyperLink ID="HypLogin" runat="server" Text="Login" CssClass="nav-link" NavigateUrl="UserLogin.aspx"></asp:HyperLink>
-                            </li>
-                            <li class="nav-item h4">
-                                <asp:HyperLink ID="HypUserPanel" runat="server" Text="" CssClass="nav-link" NavigateUrl="~/Dashboard/User/UserDashboard.aspx"></asp:HyperLink>
-                            </li>
-                            <li class="nav-item h4">
-                                <asp:HyperLink ID="HypAdminPanel" runat="server" Text="" CssClass="nav-link" NavigateUrl="~/Dashboard/Admin/AdminDashboard.aspx"></asp:HyperLink>
-                            </li>
-
-                            <li class="nav-item h4">
-                                <asp:HyperLink ID="HypLogout" runat="server" Text="" CssClass="nav-link" NavigateUrl="Logout.aspx"></asp:HyperLink>
-                            </li>
-                        </ul>
-                        <div class="d-flex">
-                            <input class="form-control me-2" type="search" placeholder="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            <!--NavBar End -->
-
-            <!--Content Start -->
-            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-            </asp:ContentPlaceHolder>
-            <!--Content End -->
-
-            <!--Footer Start -->
-            <footer class="myFooter">
-                <ul class="myFooterLinks">
-                    <li class="myFooterLink">
-                        <a href="#">Home</a>
-                    </li>
-                    <li class="myFooterLink">
-                        <a href="#">Contact Us</a>
-                    </li>
-                    <li class="myFooterLink">
-                        <a href="#">Terms of Use</a>
-                    </li>
-                </ul>
-            </footer>
-            <!--Footer End -->
-        </div>
+        <footer class="site-foot">
+            <div class="site-wrap">
+                PCS, a university project by Muhammad Shehryar (2021). Not connected to PTCL.
+            </div>
+        </footer>
     </form>
 </body>
 </html>

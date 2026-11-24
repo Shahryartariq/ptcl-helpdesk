@@ -1,33 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace PtclCustomerService
 {
     public partial class MainMaster : System.Web.UI.MasterPage
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected void Page_Init(object sender, EventArgs e)
         {
-            if (Session["UserID"] == null)
+            bool customer = Session["UserID"] != null;
+            bool admin = Session["AdminID"] != null;
+            if (!customer && !admin)
             {
-                if (Session["AdminID"] == null)
-                {
-                    Response.Redirect("UserLogin.aspx");
-                }
-                HypLogin.Text = null;
-                HypLogout.Text = "Logout";
-                HypUserPanel.Text = "";
-                HypAdminPanel.Text = "Admin Panel";
+                Response.Redirect("~/UserLogin.aspx");
             }
-            else
-            {
-                HypLogin.Text = null;
-                HypLogout.Text = "Logout";
-                HypUserPanel.Text = "User Panel";
-            }
+            HypUserPanel.Visible = customer;
+            HypAdminPanel.Visible = admin;
+            HypLogout.Visible = true;
+            HypLogout.NavigateUrl = customer ? "~/Logout.aspx?userSide=1" : "~/Logout.aspx?adminSide=1";
         }
     }
 }

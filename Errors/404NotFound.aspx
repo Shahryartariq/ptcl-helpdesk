@@ -2,44 +2,24 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
+<html lang="en">
+<head runat="server">
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>404 Error -PCS</title>
-    <link href="../Css/styles.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Page not found - PCS</title>
     <link href="../Css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
+    <link href="../Css/pcs.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-            <div id="layoutError">
-                <div id="layoutError_content">
-                    <main>
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-6">
-                                    <div class="text-center mt-4">
-                                        <img class="mb-4 img-error" src="../assets/img/404.svg" />
-                                        <p class="lead">This requested URL was not found on this server.</p>
-                                        <a href="../Home.aspx">
-                                            <i class="fas fa-arrow-left me-1"></i>
-                                            Return to Homepage
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                </div>
+        <main class="oops">
+            <div>
+                <div class="oops-code">404</div>
+                <h1>We can't find that page</h1>
+                <p>The link may be old, or the complaint or account it pointed to has been deleted.</p>
+                <a class="btn btn-primary" href="../Home.aspx">Go to the home page</a>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-            <script src="js/scripts.js"></script>
-        </div>
+        </main>
     </form>
 </body>
 </html>
